@@ -1,0 +1,104 @@
+---
+title: "Gapminder practice 2"
+format: dashboard
+---
+```{ojs}
+// Import necessary libraries
+Plotly = require("plotly.js-dist");
+d3 = require("d3");
+
+// Load your data
+data = d3.csv("your_data.csv").then(data => {
+  // Convert period_ending to Date
+  data.forEach(d => {
+    d.period_ending = new Date(d.period_ending);
+  });
+  return data;
+});
+
+// Define the UI elements
+country_selector = {
+  const countries = [...new Set(data.map(d => d.country_region))];
+  return html`<select>${countries.map(country => html`<option>${country}</option>`)}</select>`;
+}
+
+date_range_slider = {
+  const minDate = new Date("2009-12-31");
+  const maxDate = new Date("2019-06-30");
+  return html`<input type="range" min=${minDate.getTime()} max=${maxDate.getTime()} step="86400000">`;
+}
+
+// Filter data based on user selection
+filtered_data = {
+  const selectedCountry = country_selector.value;
+  const selectedDateRange = date_range_slider.value;
+  const startDate = new Date(parseInt(selectedDateRange.split(",")[0]));
+  const endDate = new Date(parseInt(selectedDateRange.split(",")[1]));
+  
+  return data.filter(d => 
+                       d.country_region === selectedCountry &&
+                       d.period_ending >= startDate &&
+                       d.period_ending <= endDate
+  );
+}
+
+// Create product bar plot
+product_bar_plot = {
+  const productData = d3.group(filtered_data, d => d.product);
+  const productCounts = Array.from(productData, ([product, items]) => ({
+    product,
+    total_items_requested: d3.sum(items, d => +d.items_requested_to_be_removed)
+  }));
+  
+  const layout = {
+    title: "Product Requests",
+    xaxis: { title: "Product" },
+    yaxis: { title: "Total Items Requested" }
+  };
+  
+  Plotly.newPlot("product_bar_plot", [{
+    x: productCounts.map(d => d.product),
+    y: productCounts.map(d => d.total_items_requested),
+    type: 'bar',
+    name: 'Product'
+  }], layout);
+}
+
+// Create reason bar plot
+reason_bar_plot = {
+  const reasonData = d3.group(filtered_data, d => d.reason);
+  const reasonCounts = Array.from(reasonData, ([reason, items]) => ({
+    reason,
+    total_items_requested: d3.sum(items, d => +d.items_requested_to_be_removed)
+  }));
+  
+  const layout = {
+    title: "Reason Requests",
+    xaxis: { title: "Reason" },
+    yaxis: { title: "Total Items Requested" }
+  };
+  
+  Plotly.newPlot("reason_bar_plot", [{
+    x: reasonCounts.map(d => d.reason),
+    y: reasonCounts.map(d => d.total_items_requested),
+    type: 'bar',
+    name: 'Reason'
+  }], layout);
+}
+
+// Combine all elements in a single view
+viewof country_selector = country_selector
+viewof date_range_slider = date_range_slider
+viewof product_bar_plot = product_bar_plot
+viewof reason_bar_plot = reason_bar_plot
+
+html`
+<div>
+  <div>${country_selector}</div>
+  <div>${date_range_slider}</div>
+  <div id="product_bar_plot"></div>
+  <div id="reason_bar_plot"></div>
+  </div>
+  `
+```
+

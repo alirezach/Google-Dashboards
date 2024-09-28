@@ -1,0 +1,3 @@
+library(quarto)
+install.packages("tidyverse")
+install.packages("palmerpenguins")
