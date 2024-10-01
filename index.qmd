@@ -4,6 +4,14 @@ logo: https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo
 format: 
   dashboard:
     nav-buttons:
+      - text: Home
+      - icon: house
+        href: https://alirezach.github.io/
+      - text: Persian Blog
+      - icon: pen-nib
+        href: https://alirezach.github.io/persian
+      - icon: linkedin
+        href: https://www.linkedin.com/in/alirezachamanzar/
       - icon: github
         href: https://github.com/alirezach
 theme:
@@ -64,15 +72,21 @@ all_request <- sum(top_countries$all)
 country_count <- n_distinct(data$country_region)
 
 ```
+
 # Start
-## row first {height=17%}
+
+## row first {height="17%"}
+
 ### column {width= 60%}
-__What is a content removal request?__ Governments make content removal requests to remove information from Google products, such as blog posts or YouTube videos. The data includes court orders sent to us to remove content, regardless of whether the court order is directed at Google. you can find more information and download data at [Google](https://transparencyreport.google.com/government-removals/overview?hl=en).
+
+**What is a content removal request?** Governments make content removal requests to remove information from Google products, such as blog posts or YouTube videos. The data includes court orders sent to us to remove content, regardless of whether the court order is directed at Google. you can find more information and download data at [Google](https://transparencyreport.google.com/government-removals/overview?hl=en).
 
 ## row two {height= 83%}
+
 ## column charts
 
 ### column top countries {width:50%}
+
 ```{r}
 #| padding: 0px
 #| title: "Countries with the most requests"
@@ -80,7 +94,9 @@ plot_top_countries
 ```
 
 ### column {.tabset}
+
 #### All Request by Products
+
 ```{r warning=F}
 #| padding: 0px
 
@@ -114,7 +130,9 @@ plot_ly(product_request,
          margin.t= 150)
 
 ```
+
 #### All Request by Reason
+
 ```{r warning=F}
 #| padding: 0px
 
@@ -147,6 +165,7 @@ plot_ly(reason_request,
 ```
 
 # Country profile
+
 ```{r setup2 }
 country_profile <- data %>% 
   group_by(country_region, product) %>% 
@@ -180,7 +199,8 @@ reason_plot <- shared_country_profile_reason  %>%
   add_bars(type="bar")
 ```
 
-## {.sidebar} 
+##  {.sidebar}
+
 ```{r filter_list}
 #| title: "Choose Countrey"
 #| padding: 4px
@@ -188,7 +208,9 @@ bscols(country_filter)
 ```
 
 ## Row
-### Row timeline {height=30%}
+
+### Row timeline {height="30%"}
+
 ```{r warning=F}
 library(dygraphs)
 time_series <- data %>% 
@@ -199,21 +221,25 @@ dygraph(time_series, main = "All request in years" )
 
 
 ```
-### Row timeline {height=70%}
+
+### Row timeline {height="70%"}
+
 #### column
+
 ```{r}
 #| title: "Request By product"
 bscols(product_plot)
 ```
 
 #### column
+
 ```{r}
 #| title: "Request By Reason"
 #| padding: 0px
 bscols(reason_plot)
 ```
 
-# Data 
+# Data
 
 ```{r}
 #| title: "Dataset"
@@ -221,14 +247,16 @@ bscols(reason_plot)
 datatable(data, filter = "top")
 ```
 
-# about 
+# about
+
 ## Row
+
 ### column {width: 30%}
 
-Made by **R**, __Quarto__, plotlly, Tidyvers and other friends.
-
+Made by **R**, **Quarto**, plotlly, Tidyvers and other friends.
 
 ### column {width: 70%}
+
 ```{r echo=F}
 #| title: "Remove requst in time"
 #| padding: 0px
@@ -239,5 +267,3 @@ bubbles <- data %>%
 colordf <- data.frame(key = unique(product_request$product), color = terrain.colors(55))
 MovingBubbles(bubbles,key="product", value= "n", frame = "period_ending", color = colordf, elementId = "none")
 ```
-
-
