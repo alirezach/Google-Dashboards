@@ -5,10 +5,9 @@ format:
   dashboard:
     nav-buttons:
       - text: Home
-      - icon: house
+        icon: house
         href: https://alirezach.github.io/
       - text: Persian Blog
-      - icon: pen-nib
         href: https://alirezach.github.io/persian
       - icon: linkedin
         href: https://www.linkedin.com/in/alirezachamanzar/
@@ -40,7 +39,6 @@ data <- read_csv("google-government-detailed-removal-requests-historical.csv")
 data <- data %>% 
   janitor::clean_names() %>% 
   mutate(product = gsub("ответы", "Answers", product))
-write_csv(data, file = "data_clean.csv")
 ```
 
 ```{r load_data}
